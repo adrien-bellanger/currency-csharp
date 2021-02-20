@@ -2,6 +2,9 @@
 
 using Grpc.Net.Client;
 using CurrencyMessages;
+using System.ComponentModel;
+using System.Windows.Controls;
+using System.Text.RegularExpressions;
 
 namespace CurrencyGrpcService.WpfApp
 {
@@ -31,8 +34,8 @@ namespace CurrencyGrpcService.WpfApp
                 return;
             }
 
-            float value;
-            if (!float.TryParse(textBoxCurrency.Text, out value))
+            double value;
+            if (!double.TryParse(textBoxCurrency.Text, out value))
             {
                 MessageBox.Show("Currency has to be a double.");
                 return;
@@ -40,6 +43,15 @@ namespace CurrencyGrpcService.WpfApp
 
             var convertedCurrency = await _client.ConvertDollarToStringAsync(new CurrencyNumber { Value = value });
             MessageBox.Show($"{convertedCurrency.Value}");
+        }
+
+        // Validate fields.
+        private void textBoxCurrency_Validating(object sender, CancelEventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+            
+            Regex decimalRegex = new Regex(@"^[0-9]{1,9}([\,][0-9]{1,2})?$");
+            e.Cancel = !decimalRegex.IsMatch(txt.Text);
         }
     }
 }

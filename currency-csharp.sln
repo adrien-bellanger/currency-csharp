@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CurrencyGrpcService.ClientL
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D7BEE6F7-B259-469C-851C-DB586676F558}"
 	ProjectSection(SolutionItems) = preProject
-		currency-csharp\currency.proto = currency-csharp\currency.proto
+		currency.proto = currency.proto
 	EndProjectSection
 EndProject
 Global
