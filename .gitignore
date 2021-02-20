@@ -3,3 +3,10 @@
 ################################################################################
 
 /.vs
+/CurrencyGrpcSevice/obj
+/CurrencyGrpcSevice/bin
+/CurrencyGrpcSevice.ClientLib/bin
+/CurrencyGrpcSevice.ClientLib/obj
+/CurrencyGrpcSevice.WpfApp/.vs
+/CurrencyGrpcSevice.WpfApp/bin
+/CurrencyGrpcSevice.WpfApp/obj

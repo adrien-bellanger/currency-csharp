@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option csharp_namespace = "CurrencyMessages";
+
+package currency;
+
+// The greeting service definition.
+service Currency {
+  // Sends a greeting
+  rpc ConvertDollarToString (CurrencyNumber) returns (CurrencyString);
+}
+
+// The request message containing the user's name.
+message CurrencyNumber {
+  float value = 1;
+}
+
+// The response message containing the greetings.
+message CurrencyString {
+  string value = 1;
+}
