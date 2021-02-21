@@ -13,22 +13,32 @@ namespace CurrencyGrpcService.Conversion
     {
         public string ConvertToString(int n, INumberLocale locale)
         {
-            if (n == 0)
-                return "";
-
-            string sForN = locale.GetStringForSpecialValue(n);
-            if (sForN != "")
-                return sForN;
-
-            foreach(int nSpecialValue in locale.GetAllSpecialValues())
+            // If n is under 100, no prefix is written before the special value
+            bool bNIsSmaller100 = (n < 100);
+            if (bNIsSmaller100)
             {
-                if (n > nSpecialValue)
+                string sForN = locale.GetStringForSpecialValue(n);
+                if (sForN != "")
+                    return sForN;
+            }
+
+            var listSpecialValues = locale.GetAllSpecialValues();
+
+            foreach (int nSpecialValue in locale.GetAllSpecialValues())
+            {
+                if (n >= nSpecialValue)
                 {
-                    int nPreSpecialValue = n >= 100 ? Decimal.ToInt32(Math.Floor(new decimal(n / nSpecialValue))) : 0;
-                    string sPreSpecialValue = $"{ConvertToString(nPreSpecialValue, locale)} ";
+                    // Compute the value of the string before the special value
+                    int nPreSpecialValue = Decimal.ToInt32(Math.Floor(new decimal(n / nSpecialValue)));
+                    // If n is smaller than 100, it return an empty string, else it calls recusively ConvertToString
+                    string sPreSpecialValue = bNIsSmaller100 ? "" : $"{ConvertToString(nPreSpecialValue, locale)} ";
+
+                    // Compute the value of the string after the special value
                     int nRest = n % nSpecialValue;
-                    string sSpecialString = (nRest > 0) ? locale.GetSpecialString(n) : " ";
-                    return $"{sPreSpecialValue} {locale.GetStringForSpecialValue(nSpecialValue)}{sSpecialString}{ConvertToString(nRest, locale)}";
+                    // If n is 0, it returns an empty string, else it calls recursively ConvertToString
+                    string sPostSpecialValue = (nRest == 0) ? "" : ConvertToString(nRest, locale);
+
+                    return $"{sPreSpecialValue}{locale.GetStringForSpecialValue(nSpecialValue)}{locale.GetBinderAfterSpecialValue(n)}{sPostSpecialValue}";
                 }
             }
 
