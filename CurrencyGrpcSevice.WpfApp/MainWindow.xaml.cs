@@ -2,8 +2,6 @@
 
 using Grpc.Net.Client;
 using CurrencyMessages;
-using System.ComponentModel;
-using System.Windows.Controls;
 using System.Text.RegularExpressions;
 
 namespace CurrencyGrpcService.WpfApp
@@ -34,8 +32,18 @@ namespace CurrencyGrpcService.WpfApp
                 return;
             }
 
+            // Allow spaces in the input string
+            string sWithoutWhitespace = _regexWhitespace.Replace(textBoxCurrency.Text, "");
+
+            // The given number has to be between 0 und 999 999 999,99
+            if (!_regexDouble.IsMatch(sWithoutWhitespace))
+            {
+                MessageBox.Show("Currency has to be a double between 0 and 999 999 999,99 and with less than 99 cents.");
+                return;
+            }
+
             double value;
-            if (!double.TryParse(textBoxCurrency.Text, out value))
+            if (!double.TryParse(sWithoutWhitespace, out value))
             {
                 MessageBox.Show("Currency has to be a double.");
                 return;
@@ -45,13 +53,7 @@ namespace CurrencyGrpcService.WpfApp
             MessageBox.Show($"{convertedCurrency.Value}");
         }
 
-        // Validate fields.
-        private void textBoxCurrency_Validating(object sender, CancelEventArgs e)
-        {
-            TextBox txt = sender as TextBox;
-            
-            Regex decimalRegex = new Regex(@"^[0-9]{1,9}([\,][0-9]{1,2})?$");
-            e.Cancel = !decimalRegex.IsMatch(txt.Text);
-        }
+        private static readonly Regex _regexWhitespace = new Regex(@"\s+");
+        private static readonly Regex _regexDouble = new Regex(@"^[0-9]{1,9}([\,][0-9]{1,2})?$");
     }
 }
