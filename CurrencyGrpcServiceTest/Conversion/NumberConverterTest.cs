@@ -3,7 +3,7 @@ using CurrencyGrpcService.Conversion;
 
 namespace CurrencyGrpcServiceTest.Conversion
 {
-    public class NumberConversionTest
+    public class NumberConverterTest
     {
         [SetUp]
         public void Setup()
@@ -13,7 +13,7 @@ namespace CurrencyGrpcServiceTest.Conversion
         [Test]
         public void ConvertToStringEnglish()
         {
-            NumberConversion converter = new NumberConversion();
+            NumberConverter converter = new NumberConverter();
             NumberEnglish localeEnglish = new NumberEnglish();
 
             {

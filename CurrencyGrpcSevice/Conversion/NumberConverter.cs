@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace CurrencyGrpcService.Conversion
 {
-    public interface INumberConversion
+    public interface INumberConverter
     {
         public string ConvertToString(int n, INumberLocale locale);
     }
-    public class NumberConversion : INumberConversion
+    public class NumberConverter : INumberConverter
     {
         public string ConvertToString(int n, INumberLocale locale)
         {
@@ -38,7 +38,7 @@ namespace CurrencyGrpcService.Conversion
                     // If n is 0, it returns an empty string, else it calls recursively ConvertToString
                     string sPostSpecialValue = (nRest == 0) ? "" : ConvertToString(nRest, locale);
 
-                    return $"{sPreSpecialValue}{locale.GetStringForSpecialValue(nSpecialValue)}{locale.GetBinderAfterSpecialValue(n)}{sPostSpecialValue}";
+                    return $"{sPreSpecialValue}{locale.GetStringForSpecialValue(nSpecialValue)}{locale.GetConnectorAfterSpecialValue(n)}{sPostSpecialValue}";
                 }
             }
 

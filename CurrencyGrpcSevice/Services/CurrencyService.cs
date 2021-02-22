@@ -2,7 +2,6 @@ using Grpc.Core;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using CurrencyMessages;
-using System;
 
 namespace CurrencyGrpcService
 {
@@ -16,10 +15,11 @@ namespace CurrencyGrpcService
 
         public override Task<CurrencyString> ConvertDollarToString(CurrencyNumber request, ServerCallContext context)
         {
-            Conversion.NumberConversion converter = new Conversion.NumberConversion();
+            Conversion.INumberConverter numberConverter = new Conversion.NumberConverter();
+            Conversion.ICurrencyConverter currenccyConverter = new Conversion.CurrencyConverter(numberConverter);
+            Conversion.ICurrency currency = new Conversion.Dollar();
             Conversion.NumberEnglish locale = new Conversion.NumberEnglish();
-            int nUnits = decimal.ToInt32(Math.Floor(Math.Round(new decimal(request.Value), 2)));
-            string sResult = converter.ConvertToString(nUnits, locale);
+            string sResult = currenccyConverter.ConvertToWords(request.Value, currency, locale);
 
             return Task.FromResult(new CurrencyString
             {
