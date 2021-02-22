@@ -14,7 +14,7 @@ namespace CurrencyGrpcServiceTest.Conversion
         public void ConvertToStringEnglish()
         {
             NumberConverter converter = new NumberConverter();
-            NumberEnglish localeEnglish = new NumberEnglish();
+            LocaleEnglish localeEnglish = new LocaleEnglish();
 
             {
                 int n = 0;

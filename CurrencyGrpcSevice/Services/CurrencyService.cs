@@ -18,7 +18,7 @@ namespace CurrencyGrpcService
             Conversion.INumberConverter numberConverter = new Conversion.NumberConverter();
             Conversion.ICurrencyConverter currenccyConverter = new Conversion.CurrencyConverter(numberConverter);
             Conversion.ICurrency currency = new Conversion.Dollar();
-            Conversion.NumberEnglish locale = new Conversion.NumberEnglish();
+            Conversion.LocaleEnglish locale = new Conversion.LocaleEnglish();
             string sResult = currenccyConverter.ConvertToWords(request.Value, currency, locale);
 
             return Task.FromResult(new CurrencyString

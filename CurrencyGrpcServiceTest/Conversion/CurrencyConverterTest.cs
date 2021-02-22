@@ -16,7 +16,7 @@ namespace CurrencyGrpcServiceTest.Conversion
             NumberConverter numberConverter = new NumberConverter();
             CurrencyConverter currencyConverter = new CurrencyConverter(numberConverter);
             ICurrency dollar = new Dollar();
-            NumberEnglish localeEnglish = new NumberEnglish();
+            LocaleEnglish localeEnglish = new LocaleEnglish();
 
             {
                 double d = 0;

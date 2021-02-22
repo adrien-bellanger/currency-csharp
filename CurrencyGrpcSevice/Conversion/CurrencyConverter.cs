@@ -4,7 +4,7 @@ namespace CurrencyGrpcService.Conversion
 {
     public interface ICurrencyConverter
     {
-        public string ConvertToWords(double d, ICurrency currency, INumberLocale locale);
+        public string ConvertToWords(double d, ICurrency currency, ILocale locale);
     }
 
     public class CurrencyConverter : ICurrencyConverter
@@ -14,7 +14,7 @@ namespace CurrencyGrpcService.Conversion
             NumberConverter = numberConverter;
         }
         
-        public string ConvertToWords(double dAsDouble, ICurrency currency, INumberLocale locale)
+        public string ConvertToWords(double dAsDouble, ICurrency currency, ILocale locale)
         {
             decimal d = Math.Round(new decimal(dAsDouble), 2);
 
