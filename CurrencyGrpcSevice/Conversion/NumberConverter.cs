@@ -2,43 +2,62 @@
 
 namespace CurrencyGrpcService.Conversion
 {
-    public interface INumberConverter
-    {
-        public string ConvertToString(int n, ILocale locale);
-    }
+    /// <summary>
+    /// Only implementation of the number converter in this project
+    /// </summary>
     public class NumberConverter : INumberConverter
     {
-        public string ConvertToString(int n, ILocale locale)
+        public string ConvertToWords(int n, ILocale locale)
         {
+            // If the integer is out of range, throw an argument exception
+            if (n < _minimumValue || n > _maximumValue)
+                throw new ArgumentException(GetOutOfRangeMessage());
+
             // If n is under 100, no prefix is written before the special value
             bool bNIsSmaller100 = (n < 100);
             if (bNIsSmaller100)
             {
-                string sForN = locale.GetStringForSpecialValue(n);
+                string sForN = locale.GetWordForSpecialValue(n);
                 if (sForN != "")
                     return sForN;
             }
 
-            // Find the highest special value smaller or equal to n
-            foreach (int nSpecialValue in locale.GetAllSpecialValuesOrderedByDescending())
+            // Find the greatest special value smaller or equal to n
+            foreach (int nSpecialValue in locale.GetAllSpecialValuesInDescendingOrder())
             {
                 if (n >= nSpecialValue)
                 {
-                    // Compute the value of the string before the special value
+                    // Compute how many times the special value divide the integer to convert
                     int nPreSpecialValue = Decimal.ToInt32(Math.Floor(new decimal(n / nSpecialValue)));
-                    // If n is smaller than 100, it return an empty string, else it calls recusively ConvertToString
-                    string sPreSpecialValue = bNIsSmaller100 ? "" : $"{ConvertToString(nPreSpecialValue, locale)} ";
+                    // If n is smaller than 100, the string before the special value is empty, else it calls recusively ConvertToString of nPreSpecialValue
+                    string sPreSpecialValue = bNIsSmaller100 ? "" : $"{ConvertToWords(nPreSpecialValue, locale)} ";
 
-                    // Compute the value of the string after the special value
+                    // Compute the rest after using the special value
                     int nRest = n % nSpecialValue;
-                    // If n is 0, it returns an empty string, else it calls recursively ConvertToString
-                    string sPostSpecialValue = (nRest == 0) ? "" : ConvertToString(nRest, locale);
+                    // If the rest is 0, the string after the special value is empty, else it calls recursively ConvertToString of nRest
+                    string sPostSpecialValue = (nRest == 0) ? "" : ConvertToWords(nRest, locale);
 
-                    return $"{sPreSpecialValue}{locale.GetStringForSpecialValue(nSpecialValue)}{locale.GetConnectorAfterSpecialValue(n, nSpecialValue)}{sPostSpecialValue}";
+                    // Concatenate those strings to obtain the words corresponding to n
+                    return $"{sPreSpecialValue}{locale.GetWordForSpecialValue(nSpecialValue)}{locale.GetConnectorAfterSpecialValue(n, nSpecialValue)}{sPostSpecialValue}";
                 }
             }
 
-            return "";
+            // Some special values are missing in the given locale
+            throw new ArgumentException($"The given locale is missing some special value to convert {n} to words");
         }
+
+        public string GetOutOfRangeMessage()
+        {
+            return $"The number to convert has to be between {_minimumValue} and {_maximumValue}.";
+        }
+
+        /// <summary>
+        /// Smallest value to convert
+        /// </summary>
+        private const int _minimumValue = 0;
+        /// <summary>
+        /// Greatest value to convert 
+        /// </summary>
+        private const int _maximumValue = 999999999;
     }
 }
